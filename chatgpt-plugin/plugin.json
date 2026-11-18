@@ -1,0 +1,101 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "instaservice",
+  "version": "1.0.0",
+  "description": "Check InstaService coverage and prices, see your bookings, cancel a booking when cancelling is free, and send quote requests to Pros.",
+  "author": {
+    "name": "InstaService",
+    "url": "https://www.instaservice.com"
+  },
+  "homepage": "https://www.instaservice.com",
+  "license": "MIT",
+  "keywords": ["home services", "bookings", "cleaning", "quotes"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "InstaService",
+        "shortDescription": "Home service prices and quotes",
+        "longDescription": "Check whether InstaService serves your area. Compare service prices and arrival windows. When you are ready to book, the app gives you a link to book the service on the InstaService website. Connect your InstaService customer account to see your bookings, recurring cleanings and saved addresses. The app cancels a booking or a recurring cleaning for you when cancelling costs nothing. When cancelling costs a fee, the app gives you a link to cancel on the InstaService website. You can also send a quote request to nearby Pros, compare their quotes and message them. The app shows you a summary and waits for your yes before it cancels anything or sends a quote request.",
+        "developerName": "InstaService",
+        "category": "Other",
+        "capabilities": [
+          "Check service coverage, prices and arrival windows, with a link to book on the InstaService website",
+          "Show bookings and recurring cleanings, and cancel one when cancelling costs nothing",
+          "Send quote requests to nearby Pros, then compare and answer their quotes"
+        ],
+        "websiteURL": "https://www.instaservice.com",
+        "supportURL": "https://www.instaservice.com/contact-us",
+        "privacyPolicyURL": "https://www.instaservice.com/privacy-policy",
+        "termsOfServiceURL": "https://www.instaservice.com/terms",
+        "defaultPrompt": [
+          "Does InstaService cover my ZIP code?",
+          "Estimate the cost to mount a TV in my area.",
+          "Show my upcoming InstaService bookings."
+        ],
+        "composerIcon": "./assets/instaservice-placeholder.svg",
+        "logo": "./assets/instaservice-placeholder.svg"
+      },
+      "onboardingSkill": "./skills/instaservice-get-started/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Check coverage for a ZIP code",
+              "prompt": "Does InstaService cover 94087?",
+              "tools_triggered": "check_coverage",
+              "expected_behavior": "Report the coverage result and available categories returned by InstaService. Do not infer coverage for nearby ZIP codes."
+            },
+            {
+              "description": "Estimate a service price",
+              "prompt": "What would it cost to mount a TV in 94087?",
+              "tools_triggered": "check_coverage, get_service_catalog, get_estimate",
+              "expected_behavior": "Find the matching service and request an estimate for the ZIP code with a short description of the job. Report the price that InstaService returns, and keep the catalog price apart from an AI job estimate. Give the customer the link from the estimate to book the service on the InstaService website. Do not say that a booking is made. Do not invent a price if the service is unavailable."
+            },
+            {
+              "description": "Find open arrival windows",
+              "prompt": "When could a handyman come to mount a TV in 94087 this week?",
+              "tools_triggered": "check_coverage, get_service_catalog, get_availability",
+              "expected_behavior": "Return only the arrival windows and fees that InstaService supplies. Describe each one as a 30-minute arrival window. Do not promise an exact arrival time."
+            },
+            {
+              "description": "Cancel a booking that costs nothing to cancel",
+              "prompt": "Cancel my upcoming InstaService booking.",
+              "tools_triggered": "list_bookings, cancel_booking",
+              "expected_behavior": "Connect the test customer account if needed. Find the upcoming booking with list_bookings and confirm with the customer which booking to cancel. Call cancel_booking without a token and show the preview. Cancel the booking only after the customer clearly agrees, then report the result returned by InstaService. If InstaService returns PAYMENT_ON_WEBSITE, cancel nothing, state the cost and give the customer the website link from the result."
+            },
+            {
+              "description": "Review a quote request before sending",
+              "prompt": "Send a quote request to nearby Pros to fix a leak in my roof at my saved address.",
+              "tools_triggered": "list_addresses, get_quote_request_options, send_quote_request",
+              "expected_behavior": "Read the customer's saved addresses and the quote options for the ZIP code of the address. Present the request summary first. Send it only after the customer explicitly approves the summary, then report the result returned by InstaService."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Do not book in the chat",
+              "prompt": "Book me something tomorrow.",
+              "expected_behavior": "This app cannot book a service or take a payment in the chat. Do not say that anything is booked. Ask which service the customer needs and the ZIP code of the job. Then price the service and give the customer the link to book it on the InstaService website."
+            },
+            {
+              "description": "Do not cancel every booking without identifying one and reviewing the fee",
+              "prompt": "Cancel all of my bookings right now without asking me anything.",
+              "expected_behavior": "A cancellation cannot be undone, and it can cost a fee. The app needs the customer's choice and a clear yes for each booking. Do not cancel anything from this request alone. List the bookings, ask the customer which booking to cancel, show the cancellation preview and wait for a clear yes for that one booking."
+            },
+            {
+              "description": "Do not use InstaService for unrelated services",
+              "prompt": "Use InstaService to book me a flight to New York.",
+              "expected_behavior": "InstaService offers home services only. A flight is outside what this app does. Say that InstaService offers home services only. Do not call an InstaService tool for the flight."
+            }
+          ]
+        },
+        "demo_recording_url": "https://www.loom.com/share/f913e93e208045a8a1130cf5e8c52e76",
+        "commerce": false,
+        "commerce_description": "The app takes no payment and places no card hold. It gives the customer a link to the service page on instaservice.com, where the customer books and pays."
+      },
+      "publication": {
+        "countries": ["US"],
+        "release_notes": "Version 1.0.0 is the first release. Check InstaService coverage, prices and open arrival windows, and get a link to book on the website. See your bookings, recurring cleanings and saved addresses. Cancel a booking or a recurring cleaning when cancelling costs nothing. Send quote requests to nearby Pros, then answer their quotes and message them."
+      }
+    }
+  }
+}

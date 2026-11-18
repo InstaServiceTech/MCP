@@ -1,0 +1,17 @@
+{
+  "name": "instaservice",
+  "displayName": "InstaService",
+  "version": "1.0.0",
+  "description": "Check prices and coverage for home services, request quotes from local Pros and see your bookings, with booking and payment on the InstaService website.",
+  "author": {
+    "name": "InstaService",
+    "url": "https://www.instaservice.com"
+  },
+  "homepage": "https://www.instaservice.com",
+  "license": "MIT",
+  "keywords": ["home services", "cleaning", "handyman", "plumbing", "quotes"],
+  "icon": "./assets/icon.png",
+  "supportUrl": "https://www.instaservice.com/contact-us",
+  "privacyPolicyUrl": "https://www.instaservice.com/privacy-policy",
+  "termsOfServiceUrl": "https://www.instaservice.com/terms"
+}

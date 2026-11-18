@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "instaservice": {
+      "type": "streamable-http",
+      "url": "https://www.api.instaservice.com/mcp/chatgpt",
+      "extensions": {
+        "com.openai": {
+          "auth": {
+            "type": "mixed",
+            "baseScopes": ["read", "bookings:read", "bookings:write", "profile"]
+          }
+        }
+      }
+    }
+  }
+}
